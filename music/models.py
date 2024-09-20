@@ -1,14 +1,18 @@
 from django.db import models
 from album.models import Album
-from music_API.performer.models.performer import Performer
+from django.contrib.contenttypes.models import ContentType
+from django.contrib.contenttypes.fields import GenericForeignKey
 
 # Create your models here.
 
 class Music(models.Model):
     title = models.CharField(max_length=200)
     length = models.DurationField(null=True, blank=True)
-    Performer = models.ManyToManyField(Performer, on_delete=models.CASCADE, related_name='musics')
-    albums = models.ManyToManyField(Album, on_delete=models.SET_NULL ,related_name='musics', null=True, blank=True)
+    albums = models.ManyToManyField(Album,related_name='musics', blank=True)
+
+    content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
+    object_id = models.PositiveIntegerField()
+    interprete = GenericForeignKey('content_type', 'object_id')
 
     def __str__(self):
         return self.titre
